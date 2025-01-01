@@ -22,6 +22,7 @@ workflow getSNPdup_VCFs {
         Array[File] snp_vcf = run_filtering.snp_vcf
         Array[File] snp_tbi = run_filtering.snp_tbi
         Array[File] snpdup_txt = run_filtering.snpdup_txt
+        String snpdup_num = run_filtering.snpdup_num
     }
 
 }
@@ -39,12 +40,14 @@ task run_filtering {
     bcftools view -v snps ~{vcf} -Oz -o ~{out_name}.snps.vcf.gz
     tabix -p vcf ~{out_name}.snps.vcf.gz
     zcat ~{out_name}.snps.vcf.gz | grep -v '##' | cut -f 3 | sort | uniq -c > report.txt
+    wc -l report.txt > reportnum.txt
     >>>
 
     output {
         File snp_vcf = select_first(glob("*.snps.vcf.gz"))
         File snp_tbi = select_first(glob("*.snps.vcf.gz.tbi"))
         File snpdup_txt = select_first(glob("report.txt"))
+        String snpdup_num = read_string("reportnum.txt")
     }
 
     runtime {
