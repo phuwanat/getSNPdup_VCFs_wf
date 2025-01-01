@@ -9,19 +9,17 @@ workflow getSNPdup_VCFs {
     }
 
      input {
-        Array[File] vcf_files
+        File vcf_file
     }
 
-    scatter(this_file in vcf_files) {
-        call run_filtering { 
-            input: vcf = this_file
-        }
+    call run_filtering { 
+            input: vcf = vcf_file
     }
 
     output {
-        Array[File] snp_vcf = run_filtering.snp_vcf
-        Array[File] snp_tbi = run_filtering.snp_tbi
-        Array[File] snpdup_txt = run_filtering.snpdup_txt
+        File snp_vcf = run_filtering.snp_vcf
+        File snp_tbi = run_filtering.snp_tbi
+        File snpdup_txt = run_filtering.snpdup_txt
         String snpdup_num = run_filtering.snpdup_num
     }
 
