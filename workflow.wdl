@@ -19,8 +19,9 @@ workflow getSNPdup_VCFs {
     }
 
     output {
-        Array[File] filtered_vcf = run_filtering.out_file
-        Array[File] filtered_tbi = run_filtering.out_file_tbi
+        Array[File] snp_vcf = run_filtering.snp_vcf
+        Array[File] snp_tbi = run_filtering.snp_tbi
+        Array[File] snpdup_txt = run_filtering.snpdup_txt
     }
 
 }
@@ -41,9 +42,9 @@ task run_filtering {
     >>>
 
     output {
-        File out_file = select_first(glob("*.snps.vcf.gz"))
-        File out_file_tbi = select_first(glob("*.snps.vcf.gz.tbi"))
-        File dup_report = select_first(glob("report.txt"))
+        File snp_vcf = select_first(glob("*.snps.vcf.gz"))
+        File snp_tbi = select_first(glob("*.snps.vcf.gz.tbi"))
+        File snpdup_txt = select_first(glob("report.txt"))
     }
 
     runtime {
