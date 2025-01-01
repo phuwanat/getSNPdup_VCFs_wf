@@ -37,8 +37,8 @@ task run_filtering {
     command <<<
     bcftools view -v snps ~{vcf} -Oz -o ~{out_name}.snps.vcf.gz
     tabix -p vcf ~{out_name}.snps.vcf.gz
-    zcat ~{out_name}.snps.vcf.gz | grep -v '##' | cut -f 3 | sort | uniq -c > report.txt
-    wc -l report.txt > reportnum.txt
+    zcat ~{out_name}.snps.vcf.gz | grep -v '##' | cut -f 3 | sort | uniq -c | awk '$1 > 1' > report.txt
+    wc -l report.txt | cut -f 1 -d ' ' > reportnum.txt
     >>>
 
     output {
